@@ -1,0 +1,22 @@
+1. 一个熊孩子爱吃糖，然后糖果店搞活动，可以用糖纸换糖（每颗糖都有糖纸），input是： N, C, M
+N 代表熊孩子有多少钱，C 代表一颗糖多少钱，M代表用多少张糖纸可以换一颗糖
+输出能吃几颗糖。。。
+2. Single number https://leetcode.com/problems/single-number/
+3. 找一个图里面有几个相互之间不连通的部分
+
+integer repository。 
+就是给一个数N， 求1 ／ N 的值，如果有循环体，循环体部分写两次，中间用空格隔开。
+比如 N = 3， 输出0.3 3. 
+
+問: T_n=n^2-(n-1)^2，算T_1加到T_n mod a given big prime。
+
+。。。真假，直接n^2%p就好嘛。。。感觉简单过头了，是不是他看LZ是MIT的故意放水hhh
+
+
+第一题：之前面经看到过，用糖纸换糖，N 代表钱，C 代表一颗糖多少钱，M代表用多少张糖纸可以换一颗糖，最后输出能吃几颗。简单的while循环就行，记得要加上余下的糖纸 
+
+第二题：密码是anagram of palindrome string。。。so 最后的问题就是leetcode原题Palindrome Permutation 
+
+第三题：连续子序列，判断和sum％k＝＝0，求出array中有多少个这样的subarray。然后我一开始写了O(n^2)算法，只过了4个test case其它全部超时，想了半天没想出O(n)的方法，后来才在stackoverflow上找到了O(n)的解，写出来了不过还是不太理解，
+
+https://github.com/jasonhartley/coding-challenges/blob/master/HackerRank/jwplayer/bottle-caps/src/Solution.java
