@@ -1,22 +1,24 @@
-1. 一个熊孩子爱吃糖，然后糖果店搞活动，可以用糖纸换糖（每颗糖都有糖纸），input是： N, C, M
-N 代表熊孩子有多少钱，C 代表一颗糖多少钱，M代表用多少张糖纸可以换一颗糖
-输出能吃几颗糖。。。
-2. Single number https://leetcode.com/problems/single-number/
-3. 找一个图里面有几个相互之间不连通的部分
+implement hash table, consider key collision, hash function, concurrency, reader-writer, etc.
 
-integer repository。 
-就是给一个数N， 求1 ／ N 的值，如果有循环体，循环体部分写两次，中间用空格隔开。
-比如 N = 3， 输出0.3 3. 
-
-問: T_n=n^2-(n-1)^2，算T_1加到T_n mod a given big prime。
-
-。。。真假，直接n^2%p就好嘛。。。感觉简单过头了，是不是他看LZ是MIT的故意放水hhh
+bounded blocking queue
+http://n00tc0d3r.blogspot.com/2013/08/implement-bounded-blocking-queue.html
 
 
-第一题：之前面经看到过，用糖纸换糖，N 代表钱，C 代表一颗糖多少钱，M代表用多少张糖纸可以换一颗糖，最后输出能吃几颗。简单的while循环就行，记得要加上余下的糖纸 
+Design problems:
+1. inverted index partitioning
+1st question, how to implement must queries efficiently (e.g. find documents that must have "foo" and have "bar")
+2nd question, if there are huge number of documents and huge number of terms, how do you partition, and how to implement query
 
-第二题：密码是anagram of palindrome string。。。so 最后的问题就是leetcode原题Palindrome Permutation 
+2. implement a key-value store
+you have limited memory: enough to store all the keys in memory (and plus some metadata information for each key in memory) 
+but values can potentially be very large and cannot fit in memory; you have a file system, you can create files, delete files, 
+read from files, write to files, for writes you can only append to end of file, you cannot modify contents in the middle of a file 
+or insert contents in the middle of a file.
+consider concurrency, efficiency, garbage collection, etc.
 
-第三题：连续子序列，判断和sum％k＝＝0，求出array中有多少个这样的subarray。然后我一开始写了O(n^2)算法，只过了4个test case其它全部超时，想了半天没想出O(n)的方法，后来才在stackoverflow上找到了O(n)的解，写出来了不过还是不太理解，
 
-https://github.com/jasonhartley/coding-challenges/blob/master/HackerRank/jwplayer/bottle-caps/src/Solution.java
+one more design problem:
+design a statistics collection and reporting system for data-center machines (large number of machines that report large number of stats, 
+long history data, etc), you can read about LinkedIn's inGraph to get some ideas (inGraph sucks in some ways, not necessarily all its design decisions are perfect):
+https://engineering.linkedin.com/metrics/scaling-collection-self-service-metrics
+https://engineering.linkedin.com/32/eric-intern-origin-ingraphs
