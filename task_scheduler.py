@@ -7,6 +7,70 @@ the requested time is in millisecond precision, what if the time is in
 microsecond/nanosecond precision
 """
 
+
+
+class Task(Thread):
+  def __init__(self, callback):
+    Thread.__init__(self)
+    self._callback = callback
+
+  def run(self):
+    self._callback()
+
+
+
+class Executor(Thread):
+
+  def __init__(self, task_queue, task_queue_cv):
+    Thread.__init__(self)
+    self._task_queue = task_queue
+    self._task_queue_cv = task_queue_cv
+
+  def run(self):
+    while True:
+      with self._task_queue_cv:
+        task_threads = []
+        while not self._task_queue.empty():
+          execution_time, task = self._task_queue.get()
+          if execution_time > time():
+            self._task_queue.put((execution_time, task))
+            break
+
+          task.start()
+          task_threads.append(task)
+
+        for task_thread in task_threads:
+          task_thread.join()
+
+
+
+class Scheduler(Thread):
+
+  def __init__(self, sleep_duration=1):
+    Thread.__init__(self)
+    self._task_queue = PriorityQueue()
+    self._task_queue_cv = Condition()
+    self._executor = Executor(self._task_queue, self._task_queue_cv)
+    self._sleep_duration = sleep_duration
+
+    self._executor.start()
+
+  def run(self):
+    while True:
+      sleep(self._sleep_duration)
+      with self._task_queue_cv:
+        self._task_queue_cv.notify()
+
+  def Schedule(self, task, start_time):
+    self._task_queue.put((start_time, task))
+
+
+
+
+
+
+
+
 from __future__ import print_function
 
 from Queue import PriorityQueue
