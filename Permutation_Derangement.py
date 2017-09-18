@@ -110,7 +110,7 @@ def derangement(s):
                 path.add(ls[i])
                 ls[index], ls[i] = ls[i], ls[index]
                 if ls[index] != s[index] and ls[i] != s[i]:   # 如果满足条件就继续recusive call，否则就直接换回来
-                    helper(index+1, ls[:], set(), result)
+                    helper(index+1, ls, set(), result)
                 ls[index], ls[i] = ls[i], ls[index]
 
 
