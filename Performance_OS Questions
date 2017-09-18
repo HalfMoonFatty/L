@@ -2,10 +2,69 @@ performance:
 
 linkedin的页面load很慢，可能是哪些原因导致的？可以有什么办法来衡量，可以怎么解决etc
 
+Start by drawing the system architecture diagram: client, server, database.
+Then mention that there are many places things can go wrong.
+
+Client:
+- Most browsers support inspecting network traffic. In Chrome, this is right click -> "Inspect elements" -> "Network" tab.
+  It shows the RTT and latency breakdown for every HTTP call issued to render the page. From there, you can find some
+  performance bottlenecks, e.g. if a particular server is slow, or if some requested file's size is too large.
+- If some requested file's size is too large, we can consider compression. Multimedia files (images, audios, videos) are good
+  candidates. Sometimes, when latency is really critical, we can also consider to compress text files like JS files. There are
+  open-source JS "compilers" that will "compress" JS file by doing tricks like renaming long var names to shorter ones (e.g.
+  "var total_length = 0;" becomes "var t=0;").
+- The JS code itself may be inefficient. For example, some component may be issuing synchrounous calls to get content, which
+  blocks subsequent calls. It's better to issue AJAX calls instead to unblock subsequent calls.s
+
+Server:
+- Server serves each request by a request handler running in a dedicated thread. Threads come from a pre-allocated thread-pool
+  that the server owns and constructs at start time. If the thread-pool is fully occupied, the new request threads will be
+  blocked until a new thread is available. So there are several options to optimize on this direction:
+  *  Increase the number of threads in thread pool. This is the simplest solution, and often works. The drawback is that having
+     too many *idle* threads in the pool may actually degrade performance.
+  *  Investigate why the pending threads are taking so long. Sometimes there may even be a bug in the server that never
+     terminates a request thread, which makes that thread resource forever leaked. In this case, unless the server restarts,
+     that thread is forever gone. So if we don't restart the server for long enough, and the bug happens often enough, we may
+     risk leaking *all* theads in the thread pool, and suddenly all subsequent requests will timeout!
+     - Obviously we should try to fix the bug if we can. If we can't identify the bug, at lease we should have monitors on the
+       number of active requests, so oncall can restart the server in case this happens.
+- Increase the replication factor. If we can afford more physical resources, it's better to repliate more servers, rather than
+  increase the number of threads in the thread pool. Web application servers typically serves HTTP requests, which by definition
+  is stateless, so we don't need to worry about consistency for replicating the web servers.
+- If disk IO is taking too long, we can consider to add memcache servers sitting next to our application servers. Network delays
+  are typically smaller than disk IO delays. Also note that memcache can be deployed with replication, and memcache library
+  guarantees consistency.
+
+Database:
+- If the database queries are slow, we can investigate the SQL queries sent from our application server. The first thing to
+  do is to run "EXPLAIN" on your SQL (e.g. "EXPLAIN SELECT * FROM Foo WHERE Id = 123;"). It shows you the query execution plan,
+  including the DB indexes used and whether it is a full table scan.
+- From there, you can brainstore possible optimizations. Maybe we can get rid of some unecessary joins, apply additional
+  filters, or break our SQL into multiple SQLs and request in parallel (there are many more SQL optimization possibilities
+  that's case-by-case, so this is really an open-discussion).
+- We can also consider to introduce index on some table to speed up our query. Again this is based on the query plan.
+- If we have too much data stored in a single-server database, even with index the SQL may still be slow. In this case we may
+  consider using distributed database with data sharding. We can either do horizontal or vertical data sharding. This allows
+  higher degree of parallelism, but may incur additional cost of cross machine traffic when the requested data is spread across
+  multiple machines.
+- At some point, RDBMS will be too slow even under a distributed settings. There is this famous CAP theorem which says you can
+  only get two out of {consistency, availability, partition-tolerance}. "P" is usually a must-have (e.g. if there is suddenly a
+  network cut through the middle of US, we should still be able to serve both people from NY and people from SF). Distributed
+  RDBMS sacrafices "A" to ensure "C", because RDBMS must honor ACID semantics. OTOH, if our application is ok with eventual
+  consistency, we can consider to use a NoSQL system. FYI, in contrast to ACID, people often say NoSQL guarantees BASE semantics,
+  i.e. "Basically-Available, Soft-State". This is just a fancy way of saying the system is eventual-consistent, but not
+  guaranteed for availability.
+
+==
+
 process/thread区别，thread如何安全访问共享内存->mutex，semaphone/mutex区别
+
+==
 
 virtual memory
 
 什么是虚拟内存，缺页，TLB。
+
+==
 
 How to generate a performance report for a given URL? What to save, how to represent the result?
