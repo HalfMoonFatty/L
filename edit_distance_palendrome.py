@@ -18,6 +18,8 @@ def minDistance(word1, word2):
                 dp[i][j] = min(dp[i-1][j-1]+1, dp[i-1][j]+1, dp[i][j-1]+1)
     return dp[m][n]
 
+
+
 # Motivated from:
 # https://stackoverflow.com/questions/4737791/how-to-convert-a-string-into-a-palindrome-with-minimum-number-of-operations
 def minDistancePalendrome(word):
