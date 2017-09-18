@@ -42,3 +42,36 @@ class H2O(object):
                 self.O -= 1
         self.O_cv.release()
         self.O_cv.notifyAll()
+
+        
+"""h2o lock everything"""
+
+from threading import Condition
+
+class H2O(object):
+  def __init__(self):
+    self.h = 0
+    self.o = 0
+    self.cv = Condtion()    
+
+  def H(self):
+    with self.cv:
+      self.h += 1
+      while self.h < 2 and self.o < 1:
+        self.cv.wait()
+      self.h -= 2
+      self.o -= 1
+      if self.h >= 2 and self.o >= 1:
+        self.cv.notifyAll()
+
+  def O(self):
+    with self.cv:
+      self.o += 1
+      while self.h < 2 and self.o < 1:
+        self.cv.wait()
+      self.h -= 2
+      self.o -= 1
+      if self.h >= 2 and self.o >= 1:
+        self.cv.notifyAll()
+
+        
