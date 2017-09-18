@@ -14,11 +14,11 @@ class Solution(object):
 
         def permuteHelper(nums, index, result):
             if index == len(nums):
-                result.append(nums)
+                result.append(nums[:])
                 return
             for i in range(index, len(nums)):
                 nums[index], nums[i] = nums[i], nums[index]
-                permuteHelper(nums[:], index+1, result)
+                permuteHelper(nums, index+1, result)
                 nums[index], nums[i] = nums[i], nums[index]
             return 
 
@@ -41,27 +41,29 @@ For example,
 
 
 
-from sets import Set
 class Solution(object):
     def permuteUnique(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: List[List[int]]
+        """
 
         def permuteUniqueHelper(nums, index, path, result):
             if index == len(nums):
-                result.append(nums)
+                result.append(nums[:])
                 return
             for i in range(index, len(nums)):
                 if nums[i] not in path:
                     path.add(nums[i])    # add the current number to the hashset
                     nums[index], nums[i] = nums[i], nums[index]
-                    permuteUniqueHelper(nums[:], index+1, Set(), result)
+                    permuteUniqueHelper(nums, index+1, set(), result)
                     nums[index], nums[i] = nums[i], nums[index]
             return
 
 
         result = []
-        permuteUniqueHelper(nums, 0, Set(), result)
+        permuteUniqueHelper(nums, 0, set(), result)
         return result
-    
 
     
     
