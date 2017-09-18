@@ -1,0 +1,11 @@
+performance:
+
+linkedin的页面load很慢，可能是哪些原因导致的？可以有什么办法来衡量，可以怎么解决etc
+
+process/thread区别，thread如何安全访问共享内存->mutex，semaphone/mutex区别
+
+virtual memory
+
+什么是虚拟内存，缺页，TLB。
+
+How to generate a performance report for a given URL? What to save, how to represent the result?
