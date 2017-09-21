@@ -28,6 +28,8 @@ class Executor(Thread):
 
   def run(self):
     while True:
+      while self._task_queue.empty():
+        self._task_queue_cv.wait()
       with self._task_queue_cv:
         task_threads = []
         while not self._task_queue.empty():
