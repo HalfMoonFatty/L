@@ -55,9 +55,60 @@ Database:
   i.e. "Basically-Available, Soft-State". This is just a fancy way of saying the system is eventual-consistent, but not
   guaranteed for availability.
 
+
 ==
 
-process/thread区别，thread如何安全访问共享内存->mutex，semaphone/mutex区别
+process/thread区别，thread如何安全访问共享内存->mutex，
+
+Both processes and threads are independent sequences of execution. 
+The typical difference is that threads (of the same process) run in a shared memory space, 
+while processes run in separate memory spaces.
+
+
+==
+
+Race condition:
+
+A race condition occurs when two or more threads can access shared data and they try to change it at the same time. 
+Because the thread scheduling algorithm can swap between threads at any time, you don't know the order in which the 
+threads will attempt to access the shared data. Therefore, the result of the change in data is dependent on the thread 
+scheduling algorithm, i.e. both threads are "racing" to access/change the data.
+
+
+==
+
+semaphone/mutex区别
+
+
+Strictly speaking, a mutex is locking mechanism used to synchronize access to a resource. 
+Only one task (can be a thread or process based on OS abstraction) can acquire the mutex. 
+It means there is ownership associated with mutex, and only the owner can release the lock (mutex).
+
+Mutexes are typically used to serialise access to a section of  re-entrant code that cannot be executed 
+concurrently by more than one thread. A mutex object only allows one thread into a controlled section, 
+forcing other threads which attempt to gain access to that section to wait until the first thread has exited from that section.
+
+--------
+
+Semaphore is signaling mechanism (“I am done, you can carry on” kind of signal). 
+
+A semaphore restricts the number of simultaneous users of a shared resource up to a maximum number. 
+Threads can request access to the resource (decrementing the semaphore), and can signal that they have 
+finished using the resource (incrementing the semaphore).
+
+
+==
+
+Deadlock
+
+Deadlock describes a situation where two or more threads are blocked forever, waiting for each other. 
+
+4 Conditions for deadlock:
+
+Mutual Exclusion
+Hold and Wait
+Circular Wait
+No Preemption
 
 ==
 
@@ -65,6 +116,11 @@ virtual memory
 
 什么是虚拟内存，缺页，TLB。
 
+
+
 ==
 
 How to generate a performance report for a given URL? What to save, how to represent the result?
+
+
+
