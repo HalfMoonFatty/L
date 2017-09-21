@@ -58,6 +58,11 @@ Database:
 
 ==
 
+How to generate a performance report for a given URL? What to save, how to represent the result?
+
+
+==
+
 process/thread区别，thread如何安全访问共享内存->mutex，
 
 Both processes and threads are independent sequences of execution. 
@@ -112,15 +117,42 @@ No Preemption
 
 ==
 
-virtual memory
+Virtual Memory
 
-什么是虚拟内存，缺页，TLB。
+It maps memory addresses used by a program, called virtual addresses, into physical addresses in computer memory. 
+Main storage, as seen by a process or task, appears as a contiguous address space or collection of contiguous segments. 
+The operating system manages virtual address spaces and the assignment of real memory to virtual memory. 
 
+Address translation hardware in the CPU, often referred to as a memory management unit or MMU, 
+automatically translates virtual addresses to physical addresses. 
 
 
 ==
 
-How to generate a performance report for a given URL? What to save, how to represent the result?
+Trashing
+
+Thrashing occurs on a program that works with huge data structures, as its large working set causes continual page faults 
+that drastically slow down the system. Satisfying page faults may require freeing pages that will soon have to be re-read from disk. 
+ 
+ 
+==
+
+Page Fault 
+
+An interrupt that occurs when a program requests data that is not currently in real memory. 
+The interrupt triggers the operating system to fetch the data from a virtual memory and load it into RAM.
+
+
+==
+
+TLB
+
+A translation lookaside buffer (TLB) is a memory cache that stores recent translations of 
+virtual memory to physical addresses for faster retrieval.
+
+
+==
+
 
 
 
