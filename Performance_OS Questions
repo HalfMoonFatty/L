@@ -60,6 +60,51 @@ Database:
 
 How to generate a performance report for a given URL? What to save, how to represent the result?
 
+This is a design question for a monitoring system. At a high level, the end user is just interested in various performance
+metrics such as the latencies to load different resources for the given URL. But this is actuall very easy to obain from
+browser -- right click page --> inspect --> network tab.
+
+So the interviewer is likely looking for deeper designs, i.e. design a monitoring system: https://docs.google.com/document/d/1PKkYvkfoAuH0I9NIM9F3Q3zDzANcxOnikn9_dXNvWnc/edit#heading=h.fs74lgjlidt1.
+Take a few minutes to read through that design first (you may actually be asked about this same question, since the interview
+module for performane SWE covers monitoring).
+
+Specifically for this problem, you can first say that report has a tabular strucutre. And for any report, whether is for
+performance analysis or for other cases like financial analysis, they all share the common concept of dimensions and metrics.
+Dimensions are things that don't change much, like IDs, names, dates, etc. Metrics are things that are more dynamic, e.g.
+latencies, various counts, etc.
+
+For URL performance report, you can first confirm the set of metrics user would like to see in the report, e.g.:
+
+- latencies
+- request size
+- response size
+
+And the set of dimensions:
+
+- URL
+- Sender ID (e.g. IP address)
+- Response status (e.g. 200 for OK, 404 for NOT FOUND, 302 for REDIRECT, etc.)
+- Resource type (e.g. document, gif, jpeg, script, etc.)
+
+User can define custom subset of dimensions and/or metrics for the repoert, and your reporting system can do aggregations.
+e.g. If user only wants a report with (URL, latency), then your system would take the average latencies for all recorded
+entries. More concretely, if your recorded values are:
+
+URL      IP      Status      Type      Latencies      Request Size      Response Size
+a.com    1.2.3.4 200         gif       100ms          1KB               2KB
+a.com    1.2.3.5 404         script    200ms          2KB               1KB
+
+Then the report is:
+
+URL      Latencies
+a.com    150ms
+
+as you aggregate over latencies using the AVG aggregator.
+
+Next lets move on to how to design the monitoring system. As the design doc shows, you can embed a monitoring library to client
+code to record these statistics. For URL statistics, the client is the browser, so the monitoring library has to be in
+javascript. On the monitoring system backend, you can have a server to record these monitored metrics, and store them in an
+OLAP database, which supports fast aggregation queries.
 
 ==
 
