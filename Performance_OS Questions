@@ -1,5 +1,104 @@
 performance:
 
+
++ CPU
+
+  vmstat - system CPU utilization
+  mpstat - process CPU utilization
+  prstat - who is using the CPU
+
+
+
++ Memory
+
+  System Memory: vmstat -p
+
+  Process Memmory: 
+    Process Virtual and Resident Set Size – ps –eo pid,vsz,rss,args
+    Using pmap to Inspect Process Memory Usage – pmap –x pid
+
+  Swap: 
+    Swap Summary: swap –s
+    iostat to determine if the physical swap devices are currently busy with I/O
+
+
+
++ Disk
+
+Writing:
+  writeback mode: the completion interrupt issent as soon as the cache receives the data. 
+  writethrough mode, writes now suffer a delay as the storage array waits for them to write to disk, before an I/O completion is sent. 
+
+Reading:
+  The storage array tries its best to serve reads from (its very large) cache,especially effective if prefetch is enabled and the workload is sequential. 
+
+IO Size:
+  For sequential access, larger I/O sizes are better; 
+  For random access, I/O sizes should to be picked to match the workload. First need to know your workload.
+
+iostat:
+  3 Starting points of disk behavior: Utilization Saturation and Tput
+  %b: this is percent busy and tells us disk utilization.
+  wait: the average wait queue length; it is a measure of disk saturation. 
+  kr/s and kw/s: kilobytes read and written per second, which tells us the current disk throughput.
+
+
+
++ Network
+
+  • Packets. netstat –i Network interface packet counts.
+  • Bytes. Kstat, SNMP, nx.se, and nicstat Measuring throughput in terms of bytes/sec.
+  • Utilization. nicstat calculates utilization = current throughput / known maximum.
+  • Saturation. network applications usually experience delays.
+  • Errors. netstat -i to print error counts: collisions (small numbers are normal), input errors, and output errors (late collisions).
+
+
+  netstat : packet counts and error counts
+  nicstat Tool: network utilization and saturation by interface.
+  ping Tool – host up and resp time
+  traceroute Tool - discover the hops to a host (print response time to each hop)
+
+
+
++ Process
+  ps
+  prstat
+  • SIZE. The total virtual memory size of mappings within the process, including all mapped files and devices.
+  • RSS. Resident set size. The amount of physical memory mapped into the process.
+  • TIME. The cumulative execution time for the process, printed in CPU hours, minutes, and seconds.
+  • CPU. The percentage of recent CPU time used by the process.
+  • PROCESS/NLWP. The name of the process (name of executed file) and the number of threads in the process.
+
+
+  pstack - you can often determine where the process is spending most of its time
+  truss - traces system calls made on behalf of a process.
+  dtrace
+
+
+
++ Lockstat
+
+  Two main types of user-level locks:
+  • Mutex lock. An exclusive lock. A mutex lock attempts to spin while trying obtain the lock if the holder is running on a CPU, or blocks if the holder is not running or after trying to spin for a predetermined period.
+  • Reader/Writer Lock. A shared reader lock. Only one person can hold the write lock, but many people could hold a reader lock while there are no writers.
+
+
+
++ CPU Caches
+
+size, cache line size and  set-associativity.
+• A greater size improves cache hit ratio;
+• A larger cache line size can improve throughput;
+• A higher set-associativity improves the effect of the Least Recently Used policy, which can avoid hot spots where the cache would otherwise have flushed frequently accessed data.
+
+
+
+
+
+
+
+
+
 linkedin的页面load很慢，可能是哪些原因导致的？可以有什么办法来衡量，可以怎么解决etc
 
 Start by drawing the system architecture diagram: client, server, database.
