@@ -13,7 +13,7 @@ class RateLimiter(object):
       current_time = time.time()
       if current_time - self._start_time > 1:
         self._request_count = 1
-        self._start_time = current_time
+        self._start_time = time.time()
         return
       elif self._request_count < self._max_rps:
         self._request_count += 1
